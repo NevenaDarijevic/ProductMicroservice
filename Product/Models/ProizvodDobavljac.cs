@@ -9,7 +9,8 @@ namespace Product.Models
 {
     public class ProizvodDobavljac:Base
     {
-        
+        public long ProizvodId { get; set; }
+        public long DobavljacId { get; set; }
         public Proizvod Proizvod { get; set; }
         public Dobavljac Dobavljac { get; set; }
     }

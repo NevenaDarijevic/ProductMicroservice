@@ -12,5 +12,6 @@ namespace Product.Models
     {
         [Required]
         public string Naziv { get; set; }
+        
     }
 }
