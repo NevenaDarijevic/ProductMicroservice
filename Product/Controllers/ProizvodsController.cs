@@ -15,18 +15,22 @@ namespace Product.Controllers
     public class ProizvodsController : ControllerBase
     {
         private readonly ProductContext _context;
-        private readonly MockProizvodRepozitorijum repo = new MockProizvodRepozitorijum();
+        private readonly IProizvodRepozitorijum _repozitorijum;
 
-        public ProizvodsController(ProductContext context)
+        //    private readonly MockProizvodRepozitorijum repo = new MockProizvodRepozitorijum();
+
+        //Repository pattern
+        public ProizvodsController(ProductContext context,IProizvodRepozitorijum proizvodRepozitorijum)
         {
             _context = context;
+            _repozitorijum = proizvodRepozitorijum;
         }
 
         // GET: api/Proizvods
         [HttpGet]
         public ActionResult<IEnumerable<Proizvod>> GetProizvod()
         {
-            var proizvodi = repo.VratiProizvode();
+            var proizvodi = _repozitorijum.VratiProizvode();
             return Ok(proizvodi);
         }
 
@@ -34,7 +38,7 @@ namespace Product.Controllers
         [HttpGet("{id}")]
         public ActionResult<Proizvod> GetProizvod(long id)
         {
-            var proizvod = repo.VratiProizvodPoId(id);
+            var proizvod = _repozitorijum.VratiProizvodPoId(id);
             return Ok(proizvod);
 
         }
