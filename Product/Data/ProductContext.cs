@@ -14,6 +14,6 @@ namespace Product.Data
         {
         }
 
-        public DbSet<Product.Models.Proizvod> Proizvod { get; set; }
+        public DbSet<Proizvod> Proizvod { get; set; }
     }
 }
