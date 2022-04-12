@@ -10,6 +10,16 @@ namespace Product.Data
     //S obzirom da se radi o Mock repozitorijumum(fake data), ovde ce biti hardkodovani podaci
     public class MockProizvodRepozitorijum : IProizvodRepozitorijum
     {
+        public void KreirajProizvod(Proizvod proizvod)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SacuvajPromene()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Proizvod> VratiProizvode()
         {
             var proizvodi = new List<Proizvod> {

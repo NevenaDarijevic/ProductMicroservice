@@ -10,5 +10,7 @@ namespace Product.Data
     {
         IEnumerable<Proizvod> VratiProizvode();
         Proizvod VratiProizvodPoId(long id);
+        void KreirajProizvod(Proizvod proizvod);
+        bool SacuvajPromene();
     }
 }
