@@ -15,9 +15,9 @@ namespace Product.Profiles
         {
             CreateMap<Proizvod, ProizvodReadDTO>()
                .ForMember(x => x.Dobavljaci, x => x.MapFrom(z => z.Dobavljaci.Select(y => new DobavljacDTO { Naziv = y.Dobavljac.Naziv, Id = y.DobavljacId })))
-               .ForMember(x => x.TipProizvoda, x => x.MapFrom(z => new TipProizvodaDTO { Naziv = z.TipProizvoda.Naziv, Id = z.TipProizvodaId }))
+              .ForMember(x => x.TipProizvoda, x => x.MapFrom(z => new TipProizvodaDTO { Naziv = z.TipProizvoda.Naziv, Id = z.TipProizvodaId }))
                .ForMember(x => x.JedinicaMere, x => x.MapFrom(z => new JedinicaMereDTO { Naziv = z.JedinicaMere.Naziv, Id = z.JedinicaMereId }));
-            CreateMap<ProizvodDTO, Proizvod>()
+            CreateMap<ProizvodCreateDTO, Proizvod>()
                 .ForMember(x => x.Dobavljaci, x => x.MapFrom(y => y.Dobavljaci.Select(z => new ProizvodDobavljac { DobavljacId = z })));
         }
     }

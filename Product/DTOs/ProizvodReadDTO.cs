@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Product.DTOs
 {
-    public class ProizvodReadDTO
+    public class ProizvodReadDTO:BaseDTO
     {
         public string Naziv { get; set; }
         public double Cena { get; set; }
@@ -14,6 +14,6 @@ namespace Product.DTOs
         public TipProizvodaDTO TipProizvoda { get; set; }
         public JedinicaMereDTO JedinicaMere { get; set; }
         public List<DobavljacDTO> Dobavljaci { get; set; }
-       
+
     }
 }

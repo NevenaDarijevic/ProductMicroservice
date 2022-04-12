@@ -19,9 +19,13 @@ namespace Product.Data
         public virtual DbSet<Dobavljac> Dobavljac { get; set; }
         public virtual DbSet<TipProizvoda> TipProizvoda { get; set; }
         public virtual DbSet<JedinicaMere> JedinicaMere { get; set; }
+      public virtual DbSet<ProizvodDobavljac> ProizvodDobavljac { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DatabasePRODUCT;Trusted_Connection=True;MultipleActiveResultSets=true");
+        }
 
-     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Proizvod>(entity =>

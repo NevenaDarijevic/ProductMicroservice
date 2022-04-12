@@ -31,12 +31,36 @@ namespace Product.Data
 
         public IEnumerable<Proizvod> VratiProizvode()
         {
-            return _productContext.Proizvod.ToList();
+           var lista= _productContext.Proizvod.ToList();
+            foreach(var product in lista)
+            {
+                
+                product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
+                product.TipProizvoda = _productContext.TipProizvoda.Find(product.TipProizvodaId);
+                product.Dobavljaci = _productContext.ProizvodDobavljac.Where(x => x.ProizvodId == product.Id).ToList();
+                foreach (ProizvodDobavljac pd in product.Dobavljaci)
+                {
+                    pd.Dobavljac = _productContext.Dobavljac.Find(pd.DobavljacId);
+                    pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
+                }
+
+            }
+            return lista;
         }
 
         public Proizvod VratiProizvodPoId(long id)
         {
-            return _productContext.Proizvod.FirstOrDefault(x => x.Id == id);
+          var product= _productContext.Proizvod.Find(id);
+            product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
+            product.TipProizvoda = _productContext.TipProizvoda.Find(product.TipProizvodaId);
+            product.Dobavljaci= _productContext.ProizvodDobavljac.Where(x => x.ProizvodId == product.Id).ToList();
+            foreach(ProizvodDobavljac pd in product.Dobavljaci)
+            {
+                pd.Dobavljac= _productContext.Dobavljac.Find(pd.DobavljacId);
+                pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
+            }
+
+            return product;
         }
     }
 }

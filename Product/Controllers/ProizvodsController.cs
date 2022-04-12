@@ -41,7 +41,7 @@ namespace Product.Controllers
         }
 
         // GET: api/Proizvods/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name= "GetProizvod")]
         public ActionResult<ProizvodReadDTO> GetProizvod(long id)
         {
             var proizvod = _repozitorijum.VratiProizvodPoId(id);
@@ -82,39 +82,41 @@ namespace Product.Controllers
 
             return NoContent();
         }
+        */
 
         // POST: api/Proizvods
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Proizvod>> PostProizvod(Proizvod proizvod)
+        public ActionResult<ProizvodReadDTO> PostProizvod(ProizvodCreateDTO proizvod)
         {
-            _context.Proizvod.Add(proizvod);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProizvod", new { id = proizvod.Id }, proizvod);
+            var proizvodModel = _mapper.Map<Proizvod>(proizvod);
+            _repozitorijum.KreirajProizvod(proizvodModel);
+            _repozitorijum.SacuvajPromene();
+            var proizvodReadDTO = _mapper.Map<ProizvodReadDTO>(proizvodModel);
+            return CreatedAtRoute(nameof(GetProizvod), new { Id = proizvodReadDTO.Id }, proizvodReadDTO);
         }
+        /*
+     // DELETE: api/Proizvods/5
+     [HttpDelete("{id}")]
+     public async Task<IActionResult> DeleteProizvod(long id)
+     {
+         var proizvod = await _context.Proizvod.FindAsync(id);
+         if (proizvod == null)
+         {
+             return NotFound();
+         }
 
-        // DELETE: api/Proizvods/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProizvod(long id)
-        {
-            var proizvod = await _context.Proizvod.FindAsync(id);
-            if (proizvod == null)
-            {
-                return NotFound();
-            }
+         _context.Proizvod.Remove(proizvod);
+         await _context.SaveChangesAsync();
 
-            _context.Proizvod.Remove(proizvod);
-            await _context.SaveChangesAsync();
+         return NoContent();
+     }
 
-            return NoContent();
-        }
-
-        private bool ProizvodExists(long id)
-        {
-            return _context.Proizvod.Any(e => e.Id == id);
-        }
-         */
+     private bool ProizvodExists(long id)
+     {
+         return _context.Proizvod.Any(e => e.Id == id);
+     }
+      */
     }
 }
 
