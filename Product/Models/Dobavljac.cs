@@ -18,6 +18,6 @@ namespace Product.Models
         
         public string Napomena { get; set; }
 
-        public virtual List<ProizvodDobavljac> Proizvodi { get; set; }
+      //  public virtual List<ProizvodDobavljac> Proizvodi { get; set; }
     }
 }
