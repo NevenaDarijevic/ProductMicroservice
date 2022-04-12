@@ -8,7 +8,7 @@ namespace Product.Data
 {
     //MockProizvodRepozitorijum klasa implementira interfejs IProizvodRepozitorijum gde nam se nalaze sve metode za funkcionalne zahteve
     //S obzirom da se radi o Mock repozitorijumum(fake data), ovde ce biti hardkodovani podaci
-    public class MockProizvodRepozitorijum : .IProizvodRepozitorijum
+    public class MockProizvodRepozitorijum : IProizvodRepozitorijum
     {
         public IEnumerable<Proizvod> VratiProizvode()
         {
