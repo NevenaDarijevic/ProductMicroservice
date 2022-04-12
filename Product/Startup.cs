@@ -38,8 +38,9 @@ namespace Product
             services.AddDbContext<ProductContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ProductContext")));
 
-            //mocked
-            services.AddScoped<IProizvodRepozitorijum, MockProizvodRepozitorijum>();
+
+            //MOCK: services.AddScoped<IProizvodRepozitorijum, MockProizvodRepozitorijum>();
+            services.AddScoped<IProizvodRepozitorijum, DBProizvodRepozitorijum>(); //now I inject real repo 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

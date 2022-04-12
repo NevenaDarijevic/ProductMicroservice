@@ -7,6 +7,7 @@ using Product.Models;
 
 namespace Product.Data
 {
+    //Data Acces Layer
     public class ProductContext : DbContext
     {
         public ProductContext (DbContextOptions<ProductContext> options)
