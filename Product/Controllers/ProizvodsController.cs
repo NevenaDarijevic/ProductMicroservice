@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Product.Data;
+using Product.DTOs;
 using Product.Models;
 
 namespace Product.Controllers
@@ -14,16 +16,18 @@ namespace Product.Controllers
     [ApiController]
     public class ProizvodsController : ControllerBase
     {
-        private readonly ProductContext _context;
+
         private readonly IProizvodRepozitorijum _repozitorijum;
+        private readonly IMapper _mapper;
 
         //    private readonly MockProizvodRepozitorijum repo = new MockProizvodRepozitorijum();
 
-        //Repository pattern
-        public ProizvodsController(ProductContext context,IProizvodRepozitorijum proizvodRepozitorijum)
+
+        public ProizvodsController(IProizvodRepozitorijum proizvodRepozitorijum, IMapper mapper)
         {
-            _context = context;
+
             _repozitorijum = proizvodRepozitorijum;
+            _mapper = mapper;
         }
 
         // GET: api/Proizvods
@@ -36,13 +40,16 @@ namespace Product.Controllers
 
         // GET: api/Proizvods/5
         [HttpGet("{id}")]
-        public ActionResult<Proizvod> GetProizvod(long id)
+        public ActionResult<ProizvodReadDTO> GetProizvod(long id)
         {
             var proizvod = _repozitorijum.VratiProizvodPoId(id);
-            return Ok(proizvod);
+            if (proizvod != null)
+                return Ok(_mapper.Map<ProizvodReadDTO>(proizvod));
+
+            return NotFound();
 
         }
-
+        /*
         // PUT: api/Proizvods/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -53,11 +60,11 @@ namespace Product.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(proizvod).State = EntityState.Modified;
+            //_context.Entry(proizvod).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+               // await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -105,5 +112,8 @@ namespace Product.Controllers
         {
             return _context.Proizvod.Any(e => e.Id == id);
         }
+         */
     }
 }
+
+
