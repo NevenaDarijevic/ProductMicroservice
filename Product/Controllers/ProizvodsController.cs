@@ -32,10 +32,12 @@ namespace Product.Controllers
 
         // GET: api/Proizvods
         [HttpGet]
-        public ActionResult<IEnumerable<Proizvod>> GetProizvod()
+        public ActionResult<IEnumerable<ProizvodReadDTO>> GetProizvod()
         {
             var proizvodi = _repozitorijum.VratiProizvode();
-            return Ok(proizvodi);
+            if (proizvodi != null)
+                return Ok(_mapper.Map< IEnumerable<ProizvodReadDTO>>(proizvodi));
+            return NotFound();
         }
 
         // GET: api/Proizvods/5
