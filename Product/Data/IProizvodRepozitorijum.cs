@@ -9,6 +9,6 @@ namespace Product.Data
      public interface IProizvodRepozitorijum
     {
         IEnumerable<Proizvod> VratiProizvode();
-        Proizvod VratiProizvodPoId(int id);
+        Proizvod VratiProizvodPoId(long id);
     }
 }

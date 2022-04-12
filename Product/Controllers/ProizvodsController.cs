@@ -15,6 +15,7 @@ namespace Product.Controllers
     public class ProizvodsController : ControllerBase
     {
         private readonly ProductContext _context;
+        private readonly MockProizvodRepozitorijum repo = new MockProizvodRepozitorijum();
 
         public ProizvodsController(ProductContext context)
         {
@@ -23,23 +24,19 @@ namespace Product.Controllers
 
         // GET: api/Proizvods
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Proizvod>>> GetProizvod()
+        public ActionResult<IEnumerable<Proizvod>> GetProizvod()
         {
-            return await _context.Proizvod.ToListAsync();
+            var proizvodi = repo.VratiProizvode();
+            return Ok(proizvodi);
         }
 
         // GET: api/Proizvods/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Proizvod>> GetProizvod(long id)
+        public ActionResult<Proizvod> GetProizvod(long id)
         {
-            var proizvod = await _context.Proizvod.FindAsync(id);
+            var proizvod = repo.VratiProizvodPoId(id);
+            return Ok(proizvod);
 
-            if (proizvod == null)
-            {
-                return NotFound();
-            }
-
-            return proizvod;
         }
 
         // PUT: api/Proizvods/5
