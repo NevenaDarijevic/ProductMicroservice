@@ -7,5 +7,6 @@ namespace Product.DTOs
 {
     public class DobavljacDTO:BaseDTO
     {
+        public string Naziv { get; set; }
     }
 }
