@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Product.Data;
 using Product.DTOs;
+using Product.Logging;
 using Product.Models;
 using Product.Models.Parameters;
 
@@ -22,14 +24,18 @@ namespace Product.Controllers
         private readonly IProizvodRepozitorijum _repozitorijum;
         private readonly IMapper _mapper;
 
+        private ILog _logger;
+
         //    private readonly MockProizvodRepozitorijum repo = new MockProizvodRepozitorijum();
 
 
-        public ProizvodsController(IProizvodRepozitorijum proizvodRepozitorijum, IMapper mapper)
+        public ProizvodsController(IProizvodRepozitorijum proizvodRepozitorijum, IMapper mapper, ILog logger)
         {
 
             _repozitorijum = proizvodRepozitorijum;
             _mapper = mapper;
+            _logger = logger;
+
         }
 
        
@@ -38,8 +44,16 @@ namespace Product.Controllers
         {
             var proizvodi = _repozitorijum.VratiProizvode(proizvodParameters);
             if (proizvodi != null)
-                return Ok(_mapper.Map< IEnumerable<ProizvodReadDTO>>(proizvodi));
-            return NotFound();
+            {
+                _logger.Information("Korisniku su prikazani svi proizvodi.");
+                return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
+            }
+            else
+            {
+                _logger.Information("Korisniku se nisu prikazali proizvodi jer je lista prazna.");
+                return NotFound();
+            }
+           
         }
 
        
@@ -48,9 +62,16 @@ namespace Product.Controllers
         {
             var proizvod = _repozitorijum.VratiProizvodPoId(id);
             if (proizvod != null)
+            {
+                _logger.Information("Korisniku su se prikazali podaci o izabranom proizvodu.");
                 return Ok(_mapper.Map<ProizvodReadDTO>(proizvod));
-
-            return NotFound();
+            }
+            else
+            {
+                _logger.Information("Korisniku se nije prikazao zeljeni proizvod jer nije pronadjen.");
+                return NotFound();
+            }
+            
 
         }
 
@@ -59,11 +80,17 @@ namespace Product.Controllers
         public ActionResult<ProizvodReadDTO> VratiPoNazivu(string naziv, [FromQuery] ProizvodParameters proizvodParameters)
         {
             var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x=>x.Naziv==naziv, proizvodParameters);
+           
             if (proizvodi != null)
+            {
+                _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetom nazivu.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
-
-            return NotFound();
-
+            }
+            else
+            {
+                _logger.Information("Korisniku se nisu prikazali podaci o proizvodima prema unetom nazivu jer nisu pronadjeni.");
+                return NotFound();
+            }
         }
 
        
@@ -72,9 +99,15 @@ namespace Product.Controllers
         {
             var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.Cena==cena, proizvodParameters);
             if (proizvodi != null)
+            {
+                _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetoj ceni.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
-
-            return NotFound();
+            }
+            else
+            {
+                _logger.Information("Korisniku se nisu prikazali podaci o proizvodima prema unetoj ceni jer nisu pronadjeni.");
+                return NotFound();
+            }
 
         }
 
@@ -84,9 +117,15 @@ namespace Product.Controllers
         {
             var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.Pdv == pdv, proizvodParameters);
             if (proizvodi != null)
+            {
+                _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetom PDV-u.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
-
-            return NotFound();
+            }
+            else
+            {
+                _logger.Information("Korisniku se nisu prikazali podaci o proizvodima prema unetom PDV-u jer nisu pronadjeni.");
+                return NotFound();
+            }
 
         }
 
@@ -95,9 +134,15 @@ namespace Product.Controllers
         {
             var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.JedinicaMere.Id== jedinicamere, proizvodParameters);
             if (proizvodi != null)
+            {
+                _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetoj jedinici mere proizvoda.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
-
-            return NotFound();
+            }
+            else
+            {
+                _logger.Information("Korisniku se nisu prikazali podaci o proizvodima prema unetoj jedinici mere proizvoda jer nisu pronadjeni.");
+                return NotFound();
+            }
 
         }
 
@@ -106,9 +151,15 @@ namespace Product.Controllers
         {
             var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.TipProizvoda.Id==tip, proizvodParameters);
             if (proizvodi != null)
+            {
+                _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetom tipu proizvoda.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
-
-            return NotFound();
+            }
+            else
+            {
+                _logger.Information("Korisniku se nisu prikazali podaci o proizvodima prema unetom tipu proizvoda jer nisu pronadjeni.");
+                return NotFound();
+            }
 
         }
 
@@ -121,12 +172,14 @@ namespace Product.Controllers
             var proizvodRepo= _repozitorijum.VratiProizvodPoId(id);
             if (proizvodRepo == null)
             {
+                _logger.Information("Korisniku se prikazuje poruka o neuspesnosti azuriranja jer proizvod nije pronadjen.");
                 return NotFound();
             }
             _mapper.Map(proizvod, proizvodRepo); //this will do update 
                                                  //but I will still use method for interface implementation, for good practice
             _repozitorijum.Azuriraj(proizvodRepo);
-         //   _repozitorijum.SacuvajPromene();
+            //   _repozitorijum.SacuvajPromene();
+            _logger.Information("Korisnik je uspesno azurirao proizvod.");
             return NoContent();
         }
        
@@ -144,6 +197,7 @@ namespace Product.Controllers
                    pd.Dobavljac = new Dobavljac { Id=pd.DobavljacId, Naziv=pd.Dobavljac.Naziv};
                }
             var proizvodReadDTO = _mapper.Map<ProizvodReadDTO>(proizvodModel);
+            _logger.Information("Korisnik je uspesno dodao proizvod.");
             return CreatedAtRoute(nameof(GetProizvod), new { Id = proizvodReadDTO.Id }, proizvodReadDTO); //to return also route to new product
         }
 
@@ -155,6 +209,7 @@ namespace Product.Controllers
             var proizvodRepo = _repozitorijum.VratiProizvodPoId(id);
             if (proizvodRepo == null)
             {
+                _logger.Information("Korisniku se prikazuje poruka o neuspesnosti azuriranja jer proizvod nije pronadjen.");
                 return NotFound();
             }
             var proizvodPatch = _mapper.Map<ProizvodCUDTO>(proizvodRepo);
@@ -166,6 +221,7 @@ namespace Product.Controllers
             _mapper.Map(proizvodPatch, proizvodRepo);
             _repozitorijum.Azuriraj(proizvodRepo);
             _repozitorijum.SacuvajPromene();
+            _logger.Information("Korisnik je uspesno azurirao proizvod.");
             return NoContent();
         }
 
@@ -176,12 +232,14 @@ namespace Product.Controllers
          var proizvod = _repozitorijum.VratiProizvodPoId(id);
          if (proizvod == null)
          {
-             return NotFound();
+                _logger.Information("Korisniku se prikazuje poruka o neuspesnosti brisanja jer proizvod nije pronadjen.");
+                return NotFound();
          }
 
             _repozitorijum.ObrisiProizvod(proizvod);
             _repozitorijum.SacuvajPromene();
 
+            _logger.Information("Korisnik je uspesno obrisao proizvod.");
             return NoContent();
         }
 
