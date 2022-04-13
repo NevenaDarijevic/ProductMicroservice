@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Product.Data;
@@ -55,7 +56,7 @@ namespace Product.Controllers
         // PUT: api/Proizvods/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public ActionResult PutProizvod(long id, ProizvodUpdateDTO proizvod)
+        public ActionResult PutProizvod(long id, ProizvodCUDTO proizvod)
         {
            
             var proizvodRepo= _repozitorijum.VratiProizvodPoId(id);
@@ -66,7 +67,7 @@ namespace Product.Controllers
             _mapper.Map(proizvod, proizvodRepo); //this will do update 
                                                  //but I will still use method for interface implementation, for good practice
             _repozitorijum.Azuriraj(proizvodRepo);
-            _repozitorijum.SacuvajPromene();
+         //   _repozitorijum.SacuvajPromene();
             return NoContent();
         }
        
@@ -74,7 +75,7 @@ namespace Product.Controllers
         // POST: api/Proizvods
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<ProizvodReadDTO> PostProizvod(ProizvodCreateDTO proizvod)
+        public ActionResult<ProizvodReadDTO> PostProizvod(ProizvodCUDTO proizvod)
         {
             var proizvodModel = _mapper.Map<Proizvod>(proizvod);
             _repozitorijum.KreirajProizvod(proizvodModel);
@@ -109,6 +110,28 @@ namespace Product.Controllers
          return _context.Proizvod.Any(e => e.Id == id);
      }
       */
+
+        // PATCH: api/Proizvods/5
+        [HttpPatch("{id}")]
+        public ActionResult PatchProizvod(long id, JsonPatchDocument<ProizvodCUDTO> patchDocument) //partional update
+        {
+
+            var proizvodRepo = _repozitorijum.VratiProizvodPoId(id);
+            if (proizvodRepo == null)
+            {
+                return NotFound();
+            }
+            var proizvodPatch = _mapper.Map<ProizvodCUDTO>(proizvodRepo);
+            patchDocument.ApplyTo(proizvodPatch, ModelState);
+            if (!TryValidateModel(proizvodPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+            _mapper.Map(proizvodPatch, proizvodRepo);
+            _repozitorijum.Azuriraj(proizvodRepo);
+           _repozitorijum.SacuvajPromene();
+            return NoContent();
+        }
     }
 }
 

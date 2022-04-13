@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Product.DTOs
 {
-    public class ProizvodCreateDTO
+    public class ProizvodCUDTO
     {
-        //ProizvodCreateDTO and ProizvodUpdateDTO are same, but I leave them separate because maybe in a future I will need different implementation.
+      //FOR CREATE, UPDATE, PATCH
         [Required]
         public string Naziv { get; set; }
         [Required]
