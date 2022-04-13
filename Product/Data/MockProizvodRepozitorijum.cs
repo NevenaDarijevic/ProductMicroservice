@@ -20,6 +20,11 @@ namespace Product.Data
             throw new NotImplementedException();
         }
 
+        public void ObrisiProizvod(Proizvod proizvod)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool SacuvajPromene()
         {
             throw new NotImplementedException();

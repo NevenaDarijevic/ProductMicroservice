@@ -88,28 +88,6 @@ namespace Product.Controllers
             var proizvodReadDTO = _mapper.Map<ProizvodReadDTO>(proizvodModel);
             return CreatedAtRoute(nameof(GetProizvod), new { Id = proizvodReadDTO.Id }, proizvodReadDTO); //to return also route to new product
         }
-        /*
-     // DELETE: api/Proizvods/5
-     [HttpDelete("{id}")]
-     public async Task<IActionResult> DeleteProizvod(long id)
-     {
-         var proizvod = await _context.Proizvod.FindAsync(id);
-         if (proizvod == null)
-         {
-             return NotFound();
-         }
-
-         _context.Proizvod.Remove(proizvod);
-         await _context.SaveChangesAsync();
-
-         return NoContent();
-     }
-
-     private bool ProizvodExists(long id)
-     {
-         return _context.Proizvod.Any(e => e.Id == id);
-     }
-      */
 
         // PATCH: api/Proizvods/5
         [HttpPatch("{id}")]
@@ -129,9 +107,28 @@ namespace Product.Controllers
             }
             _mapper.Map(proizvodPatch, proizvodRepo);
             _repozitorijum.Azuriraj(proizvodRepo);
-           _repozitorijum.SacuvajPromene();
+            _repozitorijum.SacuvajPromene();
             return NoContent();
         }
+
+        // DELETE: api/Proizvods/5
+        [HttpDelete("{id}")]
+        public ActionResult DeleteProizvod(long id)
+        {
+         var proizvod = _repozitorijum.VratiProizvodPoId(id);
+         if (proizvod == null)
+         {
+             return NotFound();
+         }
+
+            _repozitorijum.ObrisiProizvod(proizvod);
+            _repozitorijum.SacuvajPromene();
+
+            return NoContent();
+        }
+
+
+       
     }
 }
 

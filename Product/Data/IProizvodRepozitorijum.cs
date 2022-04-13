@@ -13,5 +13,6 @@ namespace Product.Data
         void KreirajProizvod(Proizvod proizvod);
         bool SacuvajPromene();
         void Azuriraj(Proizvod proizvod);
+        void ObrisiProizvod(Proizvod proizvod);
     }
 }
