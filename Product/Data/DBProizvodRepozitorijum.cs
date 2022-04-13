@@ -79,16 +79,23 @@ namespace Product.Data
         public Proizvod VratiProizvodPoId(long id)
         {
           var product= _productContext.Proizvod.Find(id);
-            product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
-            product.TipProizvoda = _productContext.TipProizvoda.Find(product.TipProizvodaId);
-            product.Dobavljaci= _productContext.ProizvodDobavljac.Where(x => x.ProizvodId == product.Id).ToList();
-            foreach(ProizvodDobavljac pd in product.Dobavljaci)
+            if (product != null)
             {
-                pd.Dobavljac= _productContext.Dobavljac.Find(pd.DobavljacId);
-                pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
-            }
+                product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
+                product.TipProizvoda = _productContext.TipProizvoda.Find(product.TipProizvodaId);
+                product.Dobavljaci = _productContext.ProizvodDobavljac.Where(x => x.ProizvodId == product.Id).ToList();
+                foreach (ProizvodDobavljac pd in product.Dobavljaci)
+                {
+                    pd.Dobavljac = _productContext.Dobavljac.Find(pd.DobavljacId);
+                    pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
+                }
 
-            return product;
+                return product;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public PagedList<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
