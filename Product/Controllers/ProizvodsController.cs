@@ -31,7 +31,7 @@ namespace Product.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Proizvods
+       
         [HttpGet]
         public ActionResult<IEnumerable<ProizvodReadDTO>> GetProizvod()
         {
@@ -41,8 +41,8 @@ namespace Product.Controllers
             return NotFound();
         }
 
-        // GET: api/Proizvods/5
-        [HttpGet("{id}", Name= "GetProizvod")]
+       
+        [HttpGet("getbyid/{id}", Name= "GetProizvod")]
         public ActionResult<ProizvodReadDTO> GetProizvod(long id)
         {
             var proizvod = _repozitorijum.VratiProizvodPoId(id);
@@ -52,9 +52,67 @@ namespace Product.Controllers
             return NotFound();
 
         }
+
       
-        // PUT: api/Proizvods/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpGet("getbynaziv/{naziv}")]
+        public ActionResult<ProizvodReadDTO> VratiPoNazivu(string naziv)
+        {
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x=>x.Naziv==naziv);
+            if (proizvodi != null)
+                return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
+
+            return NotFound();
+
+        }
+
+       
+        [HttpGet("getbycena/{cena:double}")]
+        public ActionResult<ProizvodReadDTO> VratiPoCeni(double cena)
+        {
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.Cena==cena);
+            if (proizvodi != null)
+                return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
+
+            return NotFound();
+
+        }
+
+       
+        [HttpGet("getbypdv/{pdv:double}")]
+        public ActionResult<ProizvodReadDTO> VratiPoPdv(double pdv)
+        {
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.Pdv == pdv);
+            if (proizvodi != null)
+                return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
+
+            return NotFound();
+
+        }
+
+        [HttpGet("getbyjedinicamere/{jedinicamere:long}")]
+        public ActionResult<ProizvodReadDTO> VratiPoJediniciMere(long jedinicamere)
+        {
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.JedinicaMere.Id== jedinicamere);
+            if (proizvodi != null)
+                return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
+
+            return NotFound();
+
+        }
+
+        [HttpGet("getbytip/{tip}")]
+        public ActionResult<ProizvodReadDTO> VratiPoTipuProizvoda(long tip)
+        {
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.TipProizvoda.Id==tip);
+            if (proizvodi != null)
+                return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
+
+            return NotFound();
+
+        }
+
+       
+
         [HttpPut("{id}")]
         public ActionResult PutProizvod(long id, ProizvodCUDTO proizvod)
         {
@@ -72,8 +130,7 @@ namespace Product.Controllers
         }
        
 
-        // POST: api/Proizvods
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+       
         [HttpPost]
         public ActionResult<ProizvodReadDTO> PostProizvod(ProizvodCUDTO proizvod)
         {
@@ -89,7 +146,7 @@ namespace Product.Controllers
             return CreatedAtRoute(nameof(GetProizvod), new { Id = proizvodReadDTO.Id }, proizvodReadDTO); //to return also route to new product
         }
 
-        // PATCH: api/Proizvods/5
+      
         [HttpPatch("{id}")]
         public ActionResult PatchProizvod(long id, JsonPatchDocument<ProizvodCUDTO> patchDocument) //partional update
         {
@@ -111,7 +168,7 @@ namespace Product.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Proizvods/5
+       
         [HttpDelete("{id}")]
         public ActionResult DeleteProizvod(long id)
         {

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Product.Data
@@ -14,5 +15,6 @@ namespace Product.Data
         bool SacuvajPromene();
         void Azuriraj(Proizvod proizvod);
         void ObrisiProizvod(Proizvod proizvod);
+        IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter);
     }
 }

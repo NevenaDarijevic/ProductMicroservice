@@ -1,7 +1,9 @@
-﻿using Product.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Product.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Product.Data
@@ -84,5 +86,24 @@ namespace Product.Data
 
             return product;
         }
+
+        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter)
+        {
+            IEnumerable<Proizvod> products = _productContext.Proizvod.Include(t => t.JedinicaMere).Include(t => t.TipProizvoda).Where(filter);
+            foreach (Proizvod product in products)
+            {
+                product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
+                product.TipProizvoda = _productContext.TipProizvoda.Find(product.TipProizvodaId);
+                product.Dobavljaci = _productContext.ProizvodDobavljac.Where(x => x.ProizvodId == product.Id).ToList();
+                foreach (ProizvodDobavljac pd in product.Dobavljaci)
+                {
+                    pd.Dobavljac = _productContext.Dobavljac.Find(pd.DobavljacId);
+                    pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
+                }
+            }
+            return products;
+        }
+
+     
     }
 }

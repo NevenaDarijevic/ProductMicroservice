@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Product.Data
@@ -158,5 +159,13 @@ namespace Product.Data
                 }
             };
         }
+
+      
+        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Proizvod, bool>> filter)
+        {
+            return null;
+        }
+
+      
     }
 }
