@@ -15,6 +15,11 @@ namespace Product.Data
             _productContext = productContext;
         }
 
+        public void Azuriraj(Proizvod proizvod)
+        {
+           
+        }
+
         public void KreirajProizvod(Proizvod proizvod)
         {
             if (proizvod == null)

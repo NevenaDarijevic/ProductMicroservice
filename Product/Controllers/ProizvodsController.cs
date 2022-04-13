@@ -51,38 +51,25 @@ namespace Product.Controllers
             return NotFound();
 
         }
-        /*
+      
         // PUT: api/Proizvods/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProizvod(long id, Proizvod proizvod)
+        public ActionResult PutProizvod(long id, ProizvodUpdateDTO proizvod)
         {
-            if (id != proizvod.Id)
+           
+            var proizvodRepo= _repozitorijum.VratiProizvodPoId(id);
+            if (proizvodRepo == null)
             {
-                return BadRequest();
+                return NotFound();
             }
-
-            //_context.Entry(proizvod).State = EntityState.Modified;
-
-            try
-            {
-               // await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProizvodExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            _mapper.Map(proizvod, proizvodRepo); //this will do update 
+                                                 //but I will still use method for interface implementation, for good practice
+            _repozitorijum.Azuriraj(proizvodRepo);
+            _repozitorijum.SacuvajPromene();
             return NoContent();
         }
-        */
+       
 
         // POST: api/Proizvods
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -92,11 +79,11 @@ namespace Product.Controllers
             var proizvodModel = _mapper.Map<Proizvod>(proizvod);
             _repozitorijum.KreirajProizvod(proizvodModel);
             _repozitorijum.SacuvajPromene();
-      foreach(ProizvodDobavljac pd in proizvodModel.Dobavljaci)
-          {
+              foreach(ProizvodDobavljac pd in proizvodModel.Dobavljaci)
+              {
 
-               pd.Dobavljac = new Dobavljac { Id=pd.DobavljacId, Naziv=pd.Dobavljac.Naziv};
-           }
+                   pd.Dobavljac = new Dobavljac { Id=pd.DobavljacId, Naziv=pd.Dobavljac.Naziv};
+               }
             var proizvodReadDTO = _mapper.Map<ProizvodReadDTO>(proizvodModel);
             return CreatedAtRoute(nameof(GetProizvod), new { Id = proizvodReadDTO.Id }, proizvodReadDTO); //to return also route to new product
         }

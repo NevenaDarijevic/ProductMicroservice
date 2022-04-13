@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Product.DTOs
 {
-    public class ProizvodCreateDTO
+    public class ProizvodUpdateDTO
     {
         //ProizvodCreateDTO and ProizvodUpdateDTO are same, but I leave them separate because maybe in a future I will need different implementation.
         [Required]

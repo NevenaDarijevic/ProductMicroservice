@@ -12,5 +12,6 @@ namespace Product.Data
         Proizvod VratiProizvodPoId(long id);
         void KreirajProizvod(Proizvod proizvod);
         bool SacuvajPromene();
+        void Azuriraj(Proizvod proizvod);
     }
 }
