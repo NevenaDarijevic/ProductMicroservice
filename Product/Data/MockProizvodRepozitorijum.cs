@@ -1,4 +1,5 @@
 ﻿using Product.Models;
+using Product.Models.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace Product.Data
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Proizvod> VratiProizvode()
+        public IEnumerable<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters)
         {
             var proizvodi = new List<Proizvod> {
 
@@ -161,7 +162,7 @@ namespace Product.Data
         }
 
       
-        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Proizvod, bool>> filter)
+        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
         {
             return null;
         }

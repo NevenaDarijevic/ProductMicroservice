@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Product.Data;
 using Product.DTOs;
 using Product.Models;
+using Product.Models.Parameters;
 
 namespace Product.Controllers
 {
@@ -33,9 +34,9 @@ namespace Product.Controllers
 
        
         [HttpGet]
-        public ActionResult<IEnumerable<ProizvodReadDTO>> GetProizvod()
+        public ActionResult<IEnumerable<ProizvodReadDTO>> GetProizvod([FromQuery] ProizvodParameters proizvodParameters)
         {
-            var proizvodi = _repozitorijum.VratiProizvode();
+            var proizvodi = _repozitorijum.VratiProizvode(proizvodParameters);
             if (proizvodi != null)
                 return Ok(_mapper.Map< IEnumerable<ProizvodReadDTO>>(proizvodi));
             return NotFound();
@@ -55,9 +56,9 @@ namespace Product.Controllers
 
       
         [HttpGet("getbynaziv/{naziv}")]
-        public ActionResult<ProizvodReadDTO> VratiPoNazivu(string naziv)
+        public ActionResult<ProizvodReadDTO> VratiPoNazivu(string naziv, [FromQuery] ProizvodParameters proizvodParameters)
         {
-            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x=>x.Naziv==naziv);
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x=>x.Naziv==naziv, proizvodParameters);
             if (proizvodi != null)
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
 
@@ -67,9 +68,9 @@ namespace Product.Controllers
 
        
         [HttpGet("getbycena/{cena:double}")]
-        public ActionResult<ProizvodReadDTO> VratiPoCeni(double cena)
+        public ActionResult<ProizvodReadDTO> VratiPoCeni(double cena, [FromQuery] ProizvodParameters proizvodParameters)
         {
-            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.Cena==cena);
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.Cena==cena, proizvodParameters);
             if (proizvodi != null)
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
 
@@ -79,9 +80,9 @@ namespace Product.Controllers
 
        
         [HttpGet("getbypdv/{pdv:double}")]
-        public ActionResult<ProizvodReadDTO> VratiPoPdv(double pdv)
+        public ActionResult<ProizvodReadDTO> VratiPoPdv(double pdv, [FromQuery] ProizvodParameters proizvodParameters)
         {
-            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.Pdv == pdv);
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.Pdv == pdv, proizvodParameters);
             if (proizvodi != null)
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
 
@@ -90,9 +91,9 @@ namespace Product.Controllers
         }
 
         [HttpGet("getbyjedinicamere/{jedinicamere:long}")]
-        public ActionResult<ProizvodReadDTO> VratiPoJediniciMere(long jedinicamere)
+        public ActionResult<ProizvodReadDTO> VratiPoJediniciMere(long jedinicamere, [FromQuery] ProizvodParameters proizvodParameters)
         {
-            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.JedinicaMere.Id== jedinicamere);
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.JedinicaMere.Id== jedinicamere, proizvodParameters);
             if (proizvodi != null)
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
 
@@ -101,9 +102,9 @@ namespace Product.Controllers
         }
 
         [HttpGet("getbytip/{tip}")]
-        public ActionResult<ProizvodReadDTO> VratiPoTipuProizvoda(long tip)
+        public ActionResult<ProizvodReadDTO> VratiPoTipuProizvoda(long tip, [FromQuery] ProizvodParameters proizvodParameters)
         {
-            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.TipProizvoda.Id==tip);
+            var proizvodi = _repozitorijum.VratiProizvodPoKriterijumu(x => x.TipProizvoda.Id==tip, proizvodParameters);
             if (proizvodi != null)
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(proizvodi));
 

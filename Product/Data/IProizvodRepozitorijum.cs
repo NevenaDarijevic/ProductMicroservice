@@ -1,4 +1,5 @@
 ﻿using Product.Models;
+using Product.Models.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace Product.Data
 {
      public interface IProizvodRepozitorijum
     {
-        IEnumerable<Proizvod> VratiProizvode();
+        IEnumerable<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters);
         Proizvod VratiProizvodPoId(long id);
         void KreirajProizvod(Proizvod proizvod);
         bool SacuvajPromene();
         void Azuriraj(Proizvod proizvod);
         void ObrisiProizvod(Proizvod proizvod);
-        IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter);
+        IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProizvodParameters proizvodParameters);
     }
 }

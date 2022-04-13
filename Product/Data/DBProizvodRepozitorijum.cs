@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Product.Models;
+using Product.Models.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,10 +54,12 @@ namespace Product.Data
           return (_productContext.SaveChanges()>=0);
         }
 
-        public IEnumerable<Proizvod> VratiProizvode()
+        public IEnumerable<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters)
         {
-           var lista= _productContext.Proizvod.ToList();
-            foreach(var product in lista)
+            IEnumerable<Proizvod> listaAll = _productContext.Proizvod.ToList();
+            IEnumerable<Proizvod> lista = listaAll.Skip((proizvodParameters.PageNumber - 1) * proizvodParameters.PageSize).Take(proizvodParameters.PageSize).ToList();
+
+            foreach (var product in lista)
             {
                 
                 product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
@@ -87,9 +90,10 @@ namespace Product.Data
             return product;
         }
 
-        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter)
+        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
         {
-            IEnumerable<Proizvod> products = _productContext.Proizvod.Include(t => t.JedinicaMere).Include(t => t.TipProizvoda).Where(filter);
+            IEnumerable<Proizvod> productsBeforePag = _productContext.Proizvod.Include(t => t.JedinicaMere).Include(t => t.TipProizvoda).Where(filter);
+            IEnumerable<Proizvod> products = productsBeforePag.Skip((proizvodParameters.PageNumber - 1) * proizvodParameters.PageSize).Take(proizvodParameters.PageSize).ToList();
             foreach (Proizvod product in products)
             {
                 product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
