@@ -92,8 +92,13 @@ namespace Product.Controllers
             var proizvodModel = _mapper.Map<Proizvod>(proizvod);
             _repozitorijum.KreirajProizvod(proizvodModel);
             _repozitorijum.SacuvajPromene();
+      foreach(ProizvodDobavljac pd in proizvodModel.Dobavljaci)
+          {
+
+               pd.Dobavljac = new Dobavljac { Id=pd.DobavljacId, Naziv=pd.Dobavljac.Naziv};
+           }
             var proizvodReadDTO = _mapper.Map<ProizvodReadDTO>(proizvodModel);
-            return CreatedAtRoute(nameof(GetProizvod), new { Id = proizvodReadDTO.Id }, proizvodReadDTO);
+            return CreatedAtRoute(nameof(GetProizvod), new { Id = proizvodReadDTO.Id }, proizvodReadDTO); //to return also route to new product
         }
         /*
      // DELETE: api/Proizvods/5

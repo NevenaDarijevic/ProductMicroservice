@@ -21,7 +21,18 @@ namespace Product.Data
             {
                 throw new ArgumentNullException(nameof(proizvod));
             }
-            _productContext.Proizvod.Add(proizvod);
+            proizvod.JedinicaMere = _productContext.JedinicaMere.Find(proizvod.JedinicaMereId);
+            proizvod.TipProizvoda = _productContext.TipProizvoda.Find(proizvod.TipProizvodaId);
+           
+           // proizvod.Dobavljaci = _productContext.ProizvodDobavljac.Where(x => x.ProizvodId == proizvod.Id).ToList();
+            foreach (ProizvodDobavljac pd in proizvod.Dobavljaci)
+            {
+                pd.Dobavljac = _productContext.Dobavljac.Find(pd.DobavljacId);
+                pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
+            }
+           // proizvod.Dobavljaci = _productContext.ProizvodDobavljac.Where(x => x.ProizvodId == proizvod.Id).ToList();
+           
+            var product=_productContext.Proizvod.Add(proizvod);
         }
 
         public bool SacuvajPromene()
