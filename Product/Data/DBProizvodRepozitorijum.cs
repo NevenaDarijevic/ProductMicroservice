@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Product.Models;
+using Product.Models.Helpers;
 using Product.Models.Parameters;
 using System;
 using System.Collections.Generic;
@@ -54,10 +55,10 @@ namespace Product.Data
           return (_productContext.SaveChanges()>=0);
         }
 
-        public IEnumerable<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters)
+        public PagedList<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters)
         {
-            IEnumerable<Proizvod> listaAll = _productContext.Proizvod.ToList();
-            IEnumerable<Proizvod> lista = listaAll.Skip((proizvodParameters.PageNumber - 1) * proizvodParameters.PageSize).Take(proizvodParameters.PageSize).ToList();
+            IEnumerable<Proizvod> lista = _productContext.Proizvod.ToList();
+           
 
             foreach (var product in lista)
             {
@@ -72,7 +73,7 @@ namespace Product.Data
                 }
 
             }
-            return lista;
+            return PagedList< Proizvod >.ToPagedList(lista, proizvodParameters.PageNumber,proizvodParameters.PageSize);
         }
 
         public Proizvod VratiProizvodPoId(long id)
@@ -90,10 +91,9 @@ namespace Product.Data
             return product;
         }
 
-        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
+        public PagedList<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
         {
-            IEnumerable<Proizvod> productsBeforePag = _productContext.Proizvod.Include(t => t.JedinicaMere).Include(t => t.TipProizvoda).Where(filter);
-            IEnumerable<Proizvod> products = productsBeforePag.Skip((proizvodParameters.PageNumber - 1) * proizvodParameters.PageSize).Take(proizvodParameters.PageSize).ToList();
+            IEnumerable<Proizvod> products = _productContext.Proizvod.Include(t => t.JedinicaMere).Include(t => t.TipProizvoda).Where(filter);
             foreach (Proizvod product in products)
             {
                 product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
@@ -105,7 +105,7 @@ namespace Product.Data
                     pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
                 }
             }
-            return products;
+            return PagedList<Proizvod>.ToPagedList(products, proizvodParameters.PageNumber, proizvodParameters.PageSize); ;
         }
 
      

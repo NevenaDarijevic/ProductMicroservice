@@ -1,4 +1,5 @@
 ﻿using Product.Models;
+using Product.Models.Helpers;
 using Product.Models.Parameters;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace Product.Data
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters)
+        public PagedList<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters)
         {
             var proizvodi = new List<Proizvod> {
 
@@ -125,7 +126,7 @@ namespace Product.Data
                 }
                 };
 
-            return proizvodi;
+            return PagedList<Proizvod>.ToPagedList((IEnumerable<Proizvod>)proizvodi, proizvodParameters.PageNumber, proizvodParameters.PageSize);
         }
 
         public Proizvod VratiProizvodPoId(long id)
@@ -167,6 +168,9 @@ namespace Product.Data
             return null;
         }
 
-      
+        PagedList<Proizvod> IProizvodRepozitorijum.VratiProizvodPoKriterijumu(Expression<Func<Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
