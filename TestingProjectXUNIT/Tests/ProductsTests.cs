@@ -51,7 +51,7 @@ namespace TestingProjectXUNIT.Tests
               repo.GetProductById(0)).Returns(() => null);
 
             var controller = new ProductsController(mockRepo.Object, mapper, logger);
-
+          
             //Act
             var result = controller.GetProductById(1);
 
@@ -59,7 +59,8 @@ namespace TestingProjectXUNIT.Tests
             Assert.IsType<NotFoundResult>(result.Result);
         }
 
-      
+  
+
         [Fact]
         public void GetProductByID_Returns200OK__WhenValidIDProvided()
         {
@@ -104,13 +105,13 @@ namespace TestingProjectXUNIT.Tests
             Assert.IsType<OkObjectResult>(result.Result);
         }
 
-      
         [Fact]
         public void GetProductByID_ReturnsCorrectResouceType_WhenValidIDProvided()
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetProductById(11)).Returns(new Proizvod {
+              repo.GetProductById(11)).Returns(new Proizvod
+              {
 
                   Id = 11,
                   Naziv = "Proizvod 1",
@@ -149,6 +150,86 @@ namespace TestingProjectXUNIT.Tests
             Assert.IsType<ActionResult<ProizvodReadDTO>>(result);
         }
 
+
+        [Fact]
+        public void GetProductByName_Returns404NotFound_WhenNonExistentNameProvided()
+        {
+            //Arrange 
+            mockRepo.Setup(repo =>
+              repo.GetByCriteria(x => x.Naziv == "Proizvod 22", proizvodParameters)).Returns(() => null);
+
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
+
+            //Act
+            var result = controller.GetByName("Proizvod 22", proizvodParameters);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+        [Fact]
+        public void GetProductByPrice_Returns404NotFound_WhenNonExistentPriceProvided()
+        {
+            //Arrange 
+            mockRepo.Setup(repo =>
+              repo.GetByCriteria(x => x.Cena == 7889, proizvodParameters)).Returns(() => null);
+
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
+
+            //Act
+            var result = controller.GetByPrice(7889, proizvodParameters);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
+        public void GetProductByPDV_Returns404NotFound_WhenNonExistentPDVProvided()
+        {
+            //Arrange 
+            mockRepo.Setup(repo =>
+              repo.GetByCriteria(x => x.Pdv == 2, proizvodParameters)).Returns(() => null);
+
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
+
+            //Act
+            var result = controller.GetByPDV(2, proizvodParameters);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
+        public void GetProductByMeasurmentUnit_Returns404NotFound_WhenNonExistentMeasurmentUnitProvided()
+        {
+            //Arrange 
+            mockRepo.Setup(repo =>
+              repo.GetByCriteria(x => x.JedinicaMere.Id == 22, proizvodParameters)).Returns(() => null);
+
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
+
+            //Act
+            var result = controller.GetByMeasurementUnit(22, proizvodParameters);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
+        public void GetProductByType_Returns404NotFound_WhenNonExistentTypeProvided()
+        {
+            //Arrange 
+            mockRepo.Setup(repo =>
+              repo.GetByCriteria(x => x.TipProizvoda.Id== 2, proizvodParameters)).Returns(() => null);
+
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
+
+            //Act
+            var result = controller.GetByType(2, proizvodParameters);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+       
       
         [Fact]
         public void CreateProduct_ReturnsCorrectResourceType_WhenValidObjectSubmitted()
@@ -244,21 +325,21 @@ namespace TestingProjectXUNIT.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-             repo.GetProductById(11)).Returns(new Proizvod
+             repo.GetProductById(15)).Returns(new Proizvod
              {
-                 Id = 11,
-                 Naziv = "Proizvod 1",
-                 Cena = 11.1,
-                 Pdv = 0.11,
+                 Id = 15,
+                 Naziv = "Proizvod 15 update",
+                 Cena = 1110,
+                 Pdv = 10,
                  JedinicaMere = new JedinicaMere
                  {
                      Id = 1,
-                     Naziv = "Jedinica mere 1"
+                     Naziv = "Kilogram"
                  },
                  TipProizvoda = new TipProizvoda
                  {
                      Id = 1,
-                     Naziv = "Tip proizvoda 1"
+                     Naziv = "Tip 1"
                  },
                  Dobavljaci = new List<ProizvodDobavljac>
                {
@@ -266,9 +347,18 @@ namespace TestingProjectXUNIT.Tests
                         Dobavljac = new Dobavljac
                         {
                             Id = 1,
-                            PIB = "123",
-                            Napomena = "Napomena",
+                            PIB = "1221223344",
+                            Napomena = "Napomena....",
                             Naziv = "Dobavljac 1"
+                        }
+                    },
+                     new ProizvodDobavljac{
+                        Dobavljac = new Dobavljac
+                        {
+                            Id = 2,
+                            PIB = "9874512",
+                            Napomena = "Neka napomena...",
+                            Naziv = "Dobavljac 2"
                         }
                     }
                }
@@ -276,10 +366,10 @@ namespace TestingProjectXUNIT.Tests
 
             var controller = new ProductsController(mockRepo.Object, mapper, logger);
             //Act
-            var result = controller.PutProizvod(1, new ProizvodCreateAndUpdateDTO { });
+            var result = controller.PutProizvod(15, new ProizvodCreateAndUpdateDTO { });
 
             //Assert
-            Assert.IsType<NoContentResult>(result);
+            Assert.IsType<OkResult>(result);
         }
 
 
@@ -299,26 +389,6 @@ namespace TestingProjectXUNIT.Tests
             //Assert
             Assert.IsType<NotFoundResult>(result);
         }
-
-
-        [Fact]
-        public void PatchProduct_Returns404NotFound_WhenNonExistentResourceIDSubmitted()
-        {
-            //Arrange 
-            mockRepo.Setup(repo =>
-              repo.GetProductById(0)).Returns(() => null);
-
-            var controller = new ProductsController(mockRepo.Object, mapper, logger);
-
-            //Act
-            var result = controller.PatchProduct(0, new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<ProizvodCreateAndUpdateDTO> { });
-
-            //Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
-
-
-     
 
 
         private PagedList<Proizvod> GetProizvods(int num, ProductParameters proizvodParameters)

@@ -17,5 +17,6 @@ namespace Product.Data
         bool SaveChanges();
         void Update(Proizvod proizvod);
         PagedList<Proizvod> GetByCriteria(Expression<Func<Models.Proizvod, bool>> filter, ProductParameters productParameters);
+        PagedList<Proizvod> GetAllProducts(ProductParameters productParameters);
     }
 }

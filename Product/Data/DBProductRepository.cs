@@ -19,43 +19,99 @@ namespace Product.Data
             _productContext = productContext;
         }
 
-        public void Update(Proizvod proizvod)
+        public void Update(Proizvod product)
         {
-           
-        }
-
-        public void Create(Proizvod proizvod)
-        {
-            if (proizvod == null)
+            if (product == null)
             {
-                throw new ArgumentNullException(nameof(proizvod));
+                throw new ArgumentNullException(nameof(product));
             }
-            proizvod.JedinicaMere = _productContext.JedinicaMere.Find(proizvod.JedinicaMereId);
-            proizvod.TipProizvoda = _productContext.TipProizvoda.Find(proizvod.TipProizvodaId);
-           
-            foreach (ProizvodDobavljac pd in proizvod.Dobavljaci)
+            var productToUpdate = _productContext.Proizvod.Find(product.Id);
+            productToUpdate.Naziv = product.Naziv;
+            productToUpdate.Cena = product.Cena;
+            productToUpdate.TipProizvodaId = product.TipProizvodaId;
+            productToUpdate.JedinicaMereId = product.JedinicaMereId;
+
+            productToUpdate.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
+            productToUpdate.TipProizvoda = _productContext.TipProizvoda.Find(product.TipProizvodaId);
+            if (product.JedinicaMere == null)
+            {
+                throw new Exception("Ne postoji jedinica mere sa ovim ID-em.");
+            }
+            if (product.TipProizvoda == null)
+            {
+                throw new Exception("Ne postoji tip proizvoda sa ovim ID-em.");
+            }
+                if (string.IsNullOrEmpty(product.Naziv))
+            {
+                throw new Exception("Naziv ne sme biti prazan string.");
+            }
+            if (product.Pdv < 0)
+            {
+                throw new Exception("PDV ne moze biti u minusu.");
+            }
+            if (product.Cena <= 0)
+            {
+                throw new Exception("Cena mora biti veca od nule.");
+            }
+            foreach (ProizvodDobavljac pd in productToUpdate.Dobavljaci)
             {
                 pd.Dobavljac = _productContext.Dobavljac.Find(pd.DobavljacId);
+                if (pd.Dobavljac == null)
+                {
+                    throw new Exception("Ne postoji dobavljac sa unetim ID-em.");
+                }
                 pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
             }
-           var product=_productContext.Proizvod.Add(proizvod);
+    }
+
+        public void Create(Proizvod product)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+            product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);
+            product.TipProizvoda = _productContext.TipProizvoda.Find(product.TipProizvodaId);
+            if (product.JedinicaMere == null)
+            {
+                throw new Exception("Ne postoji jedinica mere sa ovim ID-em.");
+            }
+            if (product.TipProizvoda == null)
+            {
+                throw new Exception("Ne postoji tip proizvoda sa ovim ID-em.");
+            }
+            if (string.IsNullOrEmpty(product.Naziv))
+            {
+                throw new Exception("Naziv ne sme biti prazan string.");
+            }
+            if (product.Pdv < 0)
+            {
+                throw new Exception("PDV ne moze biti u minusu.");
+            }
+            if (product.Cena <= 0)
+            {
+                throw new Exception("Cena mora biti veca od nule.");
+            }
+            foreach (ProizvodDobavljac pd in product.Dobavljaci)
+            {
+                pd.Dobavljac = _productContext.Dobavljac.Find(pd.DobavljacId);
+                if (pd.Dobavljac == null)
+                {
+                    throw new Exception("Ne postoji dobavljac sa unetim ID-em.");
+                }
+                pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
+            }
+           var productNew=_productContext.Proizvod.Add(product);
         }
 
-        public void ObrisiProizvod(Proizvod proizvod)
-        {
-            if (proizvod == null)
-            {
-                throw new ArgumentNullException(nameof(proizvod));
-            }
-            _productContext.Proizvod.Remove(proizvod);
-        }
+      
 
         public bool SaveChanges()
         {
           return (_productContext.SaveChanges()>=0);
         }
 
-        public PagedList<Proizvod> VratiProizvode(ProductParameters productParameters)
+        public PagedList<Proizvod> GetAllProducts(ProductParameters productParameters)
         {
             IEnumerable<Proizvod> lista = _productContext.Proizvod.ToList();
            
@@ -78,7 +134,8 @@ namespace Product.Data
 
         public Proizvod GetProductById(long id)
         {
-          var product= _productContext.Proizvod.Find(id);
+           
+            var product= _productContext.Proizvod.Find(id);
             if (product != null)
             {
                 product.JedinicaMere = _productContext.JedinicaMere.Find(product.JedinicaMereId);

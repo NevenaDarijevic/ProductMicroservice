@@ -54,8 +54,22 @@ namespace Product.Controllers
         [HttpGet("getByName/{name}")]
         public ActionResult<ProizvodReadDTO> GetByName(string name, [FromQuery] ProductParameters productParameters)
         {
+            if(string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            {
+                var productsAll = _repository.GetAllProducts(productParameters);
+                if (productsAll == null)
+                {
+                    _logger.Information("Korisnik je zeleo da pretrazi proizvode prema nazivu, ali nije uneo kriterijum usled cega bi se prikazali svi proizvodi. Medjutim, nema vise proizvoda u bazi.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.Information("Korisniku su se prikazali podaci o svim proizvodima s obzirom da nije uneo naziv radi pretrage.");
+                    return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(productsAll));
+                }
+            }
             var products = _repository.GetByCriteria(x=>x.Naziv==name, productParameters);
-            if (products != null)
+            if (products != null && products.Count!=0)
             {
                 _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetom nazivu.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(products));
@@ -71,8 +85,22 @@ namespace Product.Controllers
         [HttpGet("getByPrice/{price:double}")]
         public ActionResult<ProizvodReadDTO> GetByPrice(double price, [FromQuery] ProductParameters productParameters)
         {
+            if (price<=0)
+            {
+                var productsAll = _repository.GetAllProducts(productParameters);
+                if (productsAll == null)
+                {
+                    _logger.Information("Korisnik je zeleo da pretrazi proizvode prema ceni, ali nije uneo kriterijum usled cega bi se prikazali svi proizvodi. Medjutim, nema vise proizvoda u bazi.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.Information("Korisniku su se prikazali podaci o svim proizvodima s obzirom da nije uneo cenu radi pretrage.");
+                    return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(productsAll));
+                }
+            }
             var products = _repository.GetByCriteria(x => x.Cena==price, productParameters);
-            if (products != null)
+            if (products != null && products.Count != 0)
             {
                 _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetoj ceni.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(products));
@@ -89,8 +117,22 @@ namespace Product.Controllers
         [HttpGet("getByPDV/{pdv:double}")]
         public ActionResult<ProizvodReadDTO> GetByPDV(double pdv, [FromQuery] ProductParameters productParameters)
         {
+            if (pdv <= 0)
+            {
+                var productsAll = _repository.GetAllProducts(productParameters);
+                if (productsAll == null)
+                {
+                    _logger.Information("Korisnik je zeleo da pretrazi proizvode prema PDV-u, ali nije uneo kriterijum usled cega bi se prikazali svi proizvodi. Medjutim, nema vise proizvoda u bazi.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.Information("Korisniku su se prikazali podaci o svim proizvodima s obzirom da nije uneo PDV radi pretrage.");
+                    return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(productsAll));
+                }
+            }
             var products = _repository.GetByCriteria(x => x.Pdv == pdv, productParameters);
-            if (products != null)
+            if (products != null && products.Count != 0)
             {
                 _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetom PDV-u.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(products));
@@ -105,8 +147,22 @@ namespace Product.Controllers
         [HttpGet("getByMeasurementUnit/{measurementUnit:long}")]
         public ActionResult<ProizvodReadDTO> GetByMeasurementUnit(long measurementUnit, [FromQuery] ProductParameters productParameters)
         {
+            if (measurementUnit<=0)
+            {
+                var productsAll = _repository.GetAllProducts(productParameters);
+                if (productsAll == null)
+                {
+                    _logger.Information("Korisnik je zeleo da pretrazi proizvode prema jedinici mere, ali nije uneo kriterijum usled cega bi se prikazali svi proizvodi. Medjutim, nema vise proizvoda u bazi.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.Information("Korisniku su se prikazali podaci o svim proizvodima s obzirom da nije uneo jedinicu mere radi pretrage.");
+                    return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(productsAll));
+                }
+            }
             var products = _repository.GetByCriteria(x => x.JedinicaMere.Id== measurementUnit, productParameters);
-            if (products != null)
+            if (products != null && products.Count != 0)
             {
                 _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetoj jedinici mere proizvoda.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(products));
@@ -121,8 +177,22 @@ namespace Product.Controllers
         [HttpGet("getByType/{type}")]
         public ActionResult<ProizvodReadDTO> GetByType(long type, [FromQuery] ProductParameters productParameters)
         {
+            if (type <= 0)
+            {
+                var productsAll = _repository.GetAllProducts(productParameters);
+                if (productsAll == null)
+                {
+                    _logger.Information("Korisnik je zeleo da pretrazi proizvode prema tipu, ali nije uneo kriterijum usled cega bi se prikazali svi proizvodi. Medjutim, nema vise proizvoda u bazi.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.Information("Korisniku su se prikazali podaci o svim proizvodima s obzirom da nije uneo tip radi pretrage.");
+                    return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(productsAll));
+                }
+            }
             var products = _repository.GetByCriteria(x => x.TipProizvoda.Id== type, productParameters);
-            if (products != null)
+            if (products != null && products.Count != 0)
             {
                 _logger.Information("Korisniku su se prikazali podaci o proizvodima prema unetom tipu proizvoda.");
                 return Ok(_mapper.Map<IEnumerable<ProizvodReadDTO>>(products));
@@ -139,18 +209,25 @@ namespace Product.Controllers
         [HttpPut("{id}")]
         public ActionResult PutProizvod(long id, ProizvodCreateAndUpdateDTO product)
         {
-           
-            var productRepo = _repository.GetProductById(id);
+             var  productRepo = _repository.GetProductById(id);
             if (productRepo == null)
             {
                 _logger.Information("Korisniku se prikazuje poruka o neuspesnosti azuriranja jer proizvod nije pronadjen.");
                 return NotFound();
             }
-            _mapper.Map(product, productRepo);  
-            _repository.Update(productRepo);
-            //   _repository.SacuvajPromene();
+            _mapper.Map(product, productRepo);
+            try
+            {
+                _repository.Update(productRepo);
+            }
+            catch (Exception e)
+            {
+                _logger.Information("Korisniku se prikazuje poruka o neuspesnosti azuriranja proizvoda zbog neispravno unetih podataka.");
+                return BadRequest(e);
+            }
+            _repository.SaveChanges();
             _logger.Information("Korisnik je uspesno azurirao proizvod.");
-            return NoContent();
+            return Ok();
         }
        
 
@@ -159,7 +236,16 @@ namespace Product.Controllers
         public ActionResult<ProizvodReadDTO> PostProduct(ProizvodCreateAndUpdateDTO product)
         {
             var productModel = _mapper.Map<Proizvod>(product);
-            _repository.Create(productModel);
+            try
+            {
+                _repository.Create(productModel);
+            }
+            catch(Exception e)
+            {
+                _logger.Information("Korisniku se prikazuje poruka o neuspesnosti dodavanja novog proizvoda zbog neispravno unetih podataka.");
+                return BadRequest(e);
+            }
+        
             _repository.SaveChanges();
               foreach(ProizvodDobavljac pd in productModel.Dobavljaci)
               {
@@ -171,27 +257,7 @@ namespace Product.Controllers
         }
 
       
-        [HttpPatch("{id}")]
-        public ActionResult PatchProduct(long id, JsonPatchDocument<ProizvodCreateAndUpdateDTO> patchDocument) //partional update
-        {
-            var productRepo = _repository.GetProductById(id);
-            if (productRepo == null)
-            {
-                _logger.Information("Korisniku se prikazuje poruka o neuspesnosti azuriranja jer proizvod nije pronadjen.");
-                return NotFound();
-            }
-            var productPatch = _mapper.Map<ProizvodCreateAndUpdateDTO>(productRepo);
-            patchDocument.ApplyTo(productPatch, ModelState);
-            if (!TryValidateModel(productPatch))
-            {
-                return ValidationProblem(ModelState);
-            }
-            _mapper.Map(productPatch, productRepo);
-            _repository.Update(productRepo);
-            _repository.SaveChanges();
-            _logger.Information("Korisnik je uspesno azurirao proizvod.");
-            return NoContent();
-        }
+    
     }
 }
 
