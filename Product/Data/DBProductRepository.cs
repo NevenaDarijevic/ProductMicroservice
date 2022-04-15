@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Product.Data
 {
-    public class DBProizvodRepozitorijum : IProizvodRepozitorijum
+    public class DBProductRepository : IProductRepository
     {
         private readonly ProductContext _productContext;
 
-        public DBProizvodRepozitorijum(ProductContext productContext) //dep.inj. 
+        public DBProductRepository(ProductContext productContext) //dep.inj. 
         {
             _productContext = productContext;
         }
@@ -55,7 +55,7 @@ namespace Product.Data
           return (_productContext.SaveChanges()>=0);
         }
 
-        public PagedList<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters)
+        public PagedList<Proizvod> VratiProizvode(ProductParameters proizvodParameters)
         {
             IEnumerable<Proizvod> lista = _productContext.Proizvod.ToList();
            
@@ -98,7 +98,7 @@ namespace Product.Data
             }
         }
 
-        public PagedList<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
+        public PagedList<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProductParameters proizvodParameters)
         {
             IEnumerable<Proizvod> products = _productContext.Proizvod.Include(t => t.JedinicaMere).Include(t => t.TipProizvoda).Where(filter);
             foreach (Proizvod product in products)

@@ -45,7 +45,7 @@ namespace Product
 
 
             //MOCK: services.AddScoped<IProizvodRepozitorijum, MockProizvodRepozitorijum>();
-            services.AddScoped<IProizvodRepozitorijum, DBProizvodRepozitorijum>(); //now I inject real repo 
+            services.AddScoped<IProductRepository, DBProductRepository>(); //now I inject real repo 
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }

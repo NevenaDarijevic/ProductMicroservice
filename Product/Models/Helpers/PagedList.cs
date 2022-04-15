@@ -27,5 +27,10 @@ namespace Product.Models.Helpers
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
+
+        public static List<Proizvod> ToPagedList(object lista, int pageNumber, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

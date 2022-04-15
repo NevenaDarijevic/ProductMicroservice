@@ -11,7 +11,7 @@ namespace Product.Data
 {
     //MockProizvodRepozitorijum klasa implementira interfejs IProizvodRepozitorijum gde nam se nalaze sve metode za funkcionalne zahteve
     //S obzirom da se radi o Mock repozitorijumum(fake data), ovde ce biti hardkodovani podaci
-    public class MockProizvodRepozitorijum : IProizvodRepozitorijum
+    public class MockProizvodRepozitorijum : IProductRepository
     {
         public void Azuriraj(Proizvod proizvod)
         {
@@ -33,7 +33,7 @@ namespace Product.Data
             throw new NotImplementedException();
         }
 
-        public PagedList<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters)
+        public PagedList<Proizvod> VratiProizvode(ProductParameters proizvodParameters)
         {
             var proizvodi = new List<Proizvod> {
 
@@ -163,12 +163,12 @@ namespace Product.Data
         }
 
       
-        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
+        public IEnumerable<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Proizvod, bool>> filter, ProductParameters proizvodParameters)
         {
             return null;
         }
 
-        PagedList<Proizvod> IProizvodRepozitorijum.VratiProizvodPoKriterijumu(Expression<Func<Proizvod, bool>> filter, ProizvodParameters proizvodParameters)
+        PagedList<Proizvod> IProductRepository.VratiProizvodPoKriterijumu(Expression<Func<Proizvod, bool>> filter, ProductParameters proizvodParameters)
         {
             throw new NotImplementedException();
         }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Product.Models.Parameters
 {
-    public class ProizvodParameters
+    public class ProductParameters
     {
         const int maxPageSize = 50;
         public int PageNumber { get; set; } = 1;

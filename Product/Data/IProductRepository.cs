@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Product.Data
 {
-     public interface IProizvodRepozitorijum
+     public interface IProductRepository
     {
-        PagedList<Proizvod> VratiProizvode(ProizvodParameters proizvodParameters);
+        PagedList<Proizvod> VratiProizvode(ProductParameters proizvodParameters);
         Proizvod VratiProizvodPoId(long id);
         void KreirajProizvod(Proizvod proizvod);
         bool SacuvajPromene();
         void Azuriraj(Proizvod proizvod);
         void ObrisiProizvod(Proizvod proizvod);
-        PagedList<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProizvodParameters proizvodParameters);
+        PagedList<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProductParameters proizvodParameters);
     }
 }

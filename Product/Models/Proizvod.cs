@@ -19,6 +19,8 @@ namespace Product.Models
         public virtual TipProizvoda TipProizvoda { get; set; }
          public virtual JedinicaMere JedinicaMere { get; set; }
        
-        public virtual List<ProizvodDobavljac> Dobavljaci { get; set; }  
+        public virtual List<ProizvodDobavljac> Dobavljaci { get; set; }
+
+       
     }
 }
