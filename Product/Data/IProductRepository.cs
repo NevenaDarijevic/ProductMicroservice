@@ -11,12 +11,11 @@ namespace Product.Data
 {
      public interface IProductRepository
     {
-        PagedList<Proizvod> VratiProizvode(ProductParameters proizvodParameters);
-        Proizvod VratiProizvodPoId(long id);
-        void KreirajProizvod(Proizvod proizvod);
-        bool SacuvajPromene();
-        void Azuriraj(Proizvod proizvod);
-        void ObrisiProizvod(Proizvod proizvod);
-        PagedList<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProductParameters proizvodParameters);
+        
+        Proizvod GetProductById(long id);
+        void Create(Proizvod proizvod);
+        bool SaveChanges();
+        void Update(Proizvod proizvod);
+        PagedList<Proizvod> GetByCriteria(Expression<Func<Models.Proizvod, bool>> filter, ProductParameters productParameters);
     }
 }

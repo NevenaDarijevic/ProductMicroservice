@@ -18,7 +18,7 @@ namespace Product.Profiles
               .ForMember(x => x.TipProizvoda, x => x.MapFrom(z => new TipProizvodaDTO { Naziv = z.TipProizvoda.Naziv, Id = z.TipProizvodaId }))
                .ForMember(x => x.JedinicaMere, x => x.MapFrom(z => new JedinicaMereDTO { Naziv = z.JedinicaMere.Naziv, Id = z.JedinicaMereId }));
 
-            CreateMap<ProizvodCUDTO, Proizvod>()
+            CreateMap<ProizvodCreateAndUpdateDTO, Proizvod>()
                 .ForMember(x => x.Dobavljaci, x => x.MapFrom(y => y.Dobavljaci.Select(z => new ProizvodDobavljac { DobavljacId = z })));
             /*
             //update

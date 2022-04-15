@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Product.DTOs
 {
-    public class ProizvodCUDTO
+    public class ProizvodCreateAndUpdateDTO
     {
       //FOR CREATE, UPDATE, PATCH
         [Required]

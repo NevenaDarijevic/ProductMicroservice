@@ -39,14 +39,9 @@ namespace Product
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product", Version = "v1" });
             });
-
             services.AddDbContext<ProductContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ProductContext")));
-
-
-            //MOCK: services.AddScoped<IProizvodRepozitorijum, MockProizvodRepozitorijum>();
             services.AddScoped<IProductRepository, DBProductRepository>(); //now I inject real repo 
-
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 

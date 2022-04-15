@@ -19,12 +19,12 @@ namespace Product.Data
             _productContext = productContext;
         }
 
-        public void Azuriraj(Proizvod proizvod)
+        public void Update(Proizvod proizvod)
         {
            
         }
 
-        public void KreirajProizvod(Proizvod proizvod)
+        public void Create(Proizvod proizvod)
         {
             if (proizvod == null)
             {
@@ -50,12 +50,12 @@ namespace Product.Data
             _productContext.Proizvod.Remove(proizvod);
         }
 
-        public bool SacuvajPromene()
+        public bool SaveChanges()
         {
           return (_productContext.SaveChanges()>=0);
         }
 
-        public PagedList<Proizvod> VratiProizvode(ProductParameters proizvodParameters)
+        public PagedList<Proizvod> VratiProizvode(ProductParameters productParameters)
         {
             IEnumerable<Proizvod> lista = _productContext.Proizvod.ToList();
            
@@ -73,10 +73,10 @@ namespace Product.Data
                 }
 
             }
-            return PagedList< Proizvod >.ToPagedList(lista, proizvodParameters.PageNumber,proizvodParameters.PageSize);
+            return PagedList< Proizvod >.ToPagedList(lista, productParameters.PageNumber,productParameters.PageSize);
         }
 
-        public Proizvod VratiProizvodPoId(long id)
+        public Proizvod GetProductById(long id)
         {
           var product= _productContext.Proizvod.Find(id);
             if (product != null)
@@ -98,7 +98,7 @@ namespace Product.Data
             }
         }
 
-        public PagedList<Proizvod> VratiProizvodPoKriterijumu(Expression<Func<Models.Proizvod, bool>> filter, ProductParameters proizvodParameters)
+        public PagedList<Proizvod> GetByCriteria(Expression<Func<Models.Proizvod, bool>> filter, ProductParameters productParameters)
         {
             IEnumerable<Proizvod> products = _productContext.Proizvod.Include(t => t.JedinicaMere).Include(t => t.TipProizvoda).Where(filter);
             foreach (Proizvod product in products)
@@ -112,7 +112,7 @@ namespace Product.Data
                     pd.Proizvod = _productContext.Proizvod.Find(pd.ProizvodId);
                 }
             }
-            return PagedList<Proizvod>.ToPagedList(products, proizvodParameters.PageNumber, proizvodParameters.PageSize); ;
+            return PagedList<Proizvod>.ToPagedList(products, productParameters.PageNumber, productParameters.PageSize); ;
         }
 
      

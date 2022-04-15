@@ -9,7 +9,6 @@ using Product.Data;
 using Product.Profiles;
 using Microsoft.AspNetCore.Mvc;
 using Product.DTOs;
-
 using Newtonsoft.Json.Serialization;
 using Product.Models.Parameters;
 using Product.Models.Helpers;
@@ -43,93 +42,18 @@ namespace TestingProjectXUNIT.Tests
             realProfile = null;
         
         }
-
-        [Fact]
-        public void GetAllProducts_ReturnsZeroResources_WhenDBIsEmpty()
-        {
-            //Arrange 
-            mockRepo.Setup(repo =>
-              repo.VratiProizvode(proizvodParameters)).Returns(GetProizvods(0,proizvodParameters));
-
-            var controller = new ProductssController(mockRepo.Object, mapper,logger);
-
-            //Act
-            var result = controller.GetProizvod(proizvodParameters);
-
-            //Assert
-            Assert.IsType<OkObjectResult>(result.Result);
-        }
-
-      
-        [Fact]
-        public void GetAllProducts_ReturnsOneResource_WhenDBHasOneResource()
-        {
-            //Arrange 
-            mockRepo.Setup(repo =>
-              repo.VratiProizvode(proizvodParameters)).Returns(GetProizvods(1, proizvodParameters));
-
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
-
-            //Act
-            var result = controller.GetProizvod(proizvodParameters);
-
-            //Assert
-            var okResult = result.Result as OkObjectResult;
-
-            var products = okResult.Value as List<ProizvodReadDTO>;
-
-            Assert.Single(products);
-        }
-
-    
-        [Fact]
-        public void GetAllProducts_Returns200OK_WhenDBHasOneResource()
-        {
-            //Arrange 
-            mockRepo.Setup(repo =>
-              repo.VratiProizvode(proizvodParameters)).Returns(GetProizvods(1, proizvodParameters));
-
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
-
-
-            //Act
-            var result = controller.GetProizvod(proizvodParameters);
-
-            //Assert
-            Assert.IsType<OkObjectResult>(result.Result);
-
-        }
-
-  
-        [Fact]
-        public void GetAllProducts_ReturnsCorrectType_WhenDBHasOneResource()
-        {
-            //Arrange 
-            mockRepo.Setup(repo =>
-              repo.VratiProizvode(proizvodParameters)).Returns(GetProizvods(1, proizvodParameters));
-
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
-
-            //Act
-            var result = controller.GetProizvod(proizvodParameters);
-
-            //Assert
-            Assert.IsType<ActionResult<IEnumerable<ProizvodReadDTO>>>(result);
-        }
-
-     
-           
+        
         [Fact]
         public void GetProductByID_Returns404NotFound_WhenNonExistentIDProvided()
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.VratiProizvodPoId(0)).Returns(() => null);
+              repo.GetProductById(0)).Returns(() => null);
 
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
 
             //Act
-            var result = controller.GetProizvod(1);
+            var result = controller.GetProductById(1);
 
             //Assert
             Assert.IsType<NotFoundResult>(result.Result);
@@ -141,7 +65,7 @@ namespace TestingProjectXUNIT.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.VratiProizvodPoId(11)).Returns(new Proizvod {
+              repo.GetProductById(11)).Returns(new Proizvod {
 
                   Id = 11,
                   Naziv = "Proizvod 1",
@@ -171,10 +95,10 @@ namespace TestingProjectXUNIT.Tests
                 }
               });
 
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
 
             //Act
-            var result = controller.GetProizvod(11);
+            var result = controller.GetProductById(11);
 
             //Assert
             Assert.IsType<OkObjectResult>(result.Result);
@@ -186,7 +110,7 @@ namespace TestingProjectXUNIT.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.VratiProizvodPoId(11)).Returns(new Proizvod {
+              repo.GetProductById(11)).Returns(new Proizvod {
 
                   Id = 11,
                   Naziv = "Proizvod 1",
@@ -216,10 +140,10 @@ namespace TestingProjectXUNIT.Tests
                 }
               });
 
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
 
             //Act
-            var result = controller.GetProizvod(11);
+            var result = controller.GetProductById(11);
 
             //Assert
             Assert.IsType<ActionResult<ProizvodReadDTO>>(result);
@@ -231,7 +155,7 @@ namespace TestingProjectXUNIT.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.VratiProizvodPoId(11)).Returns(new Proizvod {
+              repo.GetProductById(11)).Returns(new Proizvod {
                   Id = 11,
                   Naziv = "Proizvod 1",
                   Cena = 11.1,
@@ -260,10 +184,10 @@ namespace TestingProjectXUNIT.Tests
                 }
               });
 
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
 
             //Act
-            var result = controller.PostProizvod(new ProizvodCUDTO { });
+            var result = controller.PostProduct(new ProizvodCreateAndUpdateDTO { });
 
             //Assert
             Assert.IsType<ActionResult<ProizvodReadDTO>>(result);
@@ -275,7 +199,7 @@ namespace TestingProjectXUNIT.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.VratiProizvodPoId(11)).Returns(new Proizvod
+              repo.GetProductById(11)).Returns(new Proizvod
               {
                   Id = 11,
                   Naziv = "Proizvod 1",
@@ -305,10 +229,10 @@ namespace TestingProjectXUNIT.Tests
                 }
               });
 
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
 
             //Act
-            var result = controller.PostProizvod(new ProizvodCUDTO { });
+            var result = controller.PostProduct(new ProizvodCreateAndUpdateDTO { });
 
             //Assert
             Assert.IsType<CreatedAtRouteResult>(result.Result);
@@ -320,7 +244,7 @@ namespace TestingProjectXUNIT.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-             repo.VratiProizvodPoId(11)).Returns(new Proizvod
+             repo.GetProductById(11)).Returns(new Proizvod
              {
                  Id = 11,
                  Naziv = "Proizvod 1",
@@ -350,9 +274,9 @@ namespace TestingProjectXUNIT.Tests
                }
              });
 
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
             //Act
-            var result = controller.PutProizvod(1, new ProizvodCUDTO { });
+            var result = controller.PutProizvod(1, new ProizvodCreateAndUpdateDTO { });
 
             //Assert
             Assert.IsType<NoContentResult>(result);
@@ -365,12 +289,12 @@ namespace TestingProjectXUNIT.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.VratiProizvodPoId(0)).Returns(() => null);
+              repo.GetProductById(0)).Returns(() => null);
 
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
 
             //Act
-            var result = controller.PutProizvod(0, new ProizvodCUDTO { });
+            var result = controller.PutProizvod(0, new ProizvodCreateAndUpdateDTO { });
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
@@ -378,16 +302,16 @@ namespace TestingProjectXUNIT.Tests
 
 
         [Fact]
-        public void PartialProductUpdate_Returns404NotFound_WhenNonExistentResourceIDSubmitted()
+        public void PatchProduct_Returns404NotFound_WhenNonExistentResourceIDSubmitted()
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.VratiProizvodPoId(0)).Returns(() => null);
+              repo.GetProductById(0)).Returns(() => null);
 
-            var controller = new ProductssController(mockRepo.Object, mapper, logger);
+            var controller = new ProductsController(mockRepo.Object, mapper, logger);
 
             //Act
-            var result = controller.PatchProizvod(0, new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<ProizvodCUDTO> { });
+            var result = controller.PatchProduct(0, new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<ProizvodCreateAndUpdateDTO> { });
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
