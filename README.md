@@ -1,4 +1,4 @@
-# Product Microservice
+# Product Microservice - BACK END
 
 ![image](https://user-images.githubusercontent.com/58109096/163625828-4448bbff-25b9-4cf8-9d0a-2f4a52432b90.png)
 
